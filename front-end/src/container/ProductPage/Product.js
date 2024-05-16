@@ -27,7 +27,7 @@ function Product() {
 			true
 		).then((res) => {
 			if (res.status === 200) {
-                console.log(res.rows)
+               
 				setBrands(res.rows);
 			}
 		});

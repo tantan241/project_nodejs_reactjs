@@ -1,5 +1,5 @@
 export const URL = "http://localhost:8000/api/v1";
-export const URL_IMAGE = "http://127.0.0.1:8000/media";
+export const URL_IMAGE = "http://localhost:8000/static/images/";
 
 export const API_FILES = `${URL}/files`;
 
@@ -23,7 +23,7 @@ export const API_ADMIN_CUSTOMER = `${URL}/user/admin`;
 
 // export const API_ADMIN_GET_BRAND = `${API_ADMIN_PRODUCT}/get-brand`;
 
-export const API_GET_ONE_PRODUCT = `${API_ADMIN_PRODUCT}/get-one-product`;
+// export const API_GET_ONE_PRODUCT = `${API_ADMIN_PRODUCT}/get-one-product`;
 export const API_ADD_BRAND = `${API_ADMIN_BRAND}/add`;
 export const API_DASHBOARD = `${API_ADMIN_PRODUCT}/dashboard`;
 export const API_GET_ALL_BRAND_FOR_PRODUCT = `${API_ADMIN_PRODUCT}/get-all-brand-product`;

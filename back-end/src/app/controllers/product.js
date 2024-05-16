@@ -53,12 +53,12 @@ class productController {
 						{
 							name: "Giá",
 							value: "price",
-							type: "text",
+							type: "number",
 						},
 						{
 							name: "Giảm Giá",
 							value: "discount",
-							type: "text",
+							type: "number",
 						},
 						{
 							name: "Thông Số",
@@ -68,7 +68,7 @@ class productController {
 						{
 							name: "Số Lượng",
 							value: "number",
-							type: "text",
+							type: "number",
 						},
 						{
 							name: "Thương Hiệu",
@@ -139,6 +139,16 @@ class productController {
 		} catch (error) {
 			res.status(500).json({ error: "Internal Server Error" });
 		}
+	}
+	async getOneProduct(req, res) {
+		try {
+			await Product.findOne({_id: req.params.id}).then((product) => {
+				res.status(200).json({ status: 200, data: product });
+			});
+		} catch (error) {
+           
+            res.status(500).json({ error: "Internal Server Error" });
+        }
 	}
 }
 

@@ -146,11 +146,12 @@ function List(props) {
     (value) => {
       setFieldSearch(value);
       const data = dataSearch.find((item) => item.value === value);
-      if (data.type === "select") {
-        setTypeInputSearch({ type: "select", value: data.select });
-      } else {
-        setTypeInputSearch({ type: "text", value: [] });
-      }
+    //   if (data.type === "select") {
+    //     setTypeInputSearch({ type: "select", value: data.select });
+    //   } else {
+    //     setTypeInputSearch({ type: "text", value: [] });
+    //   }
+    setTypeInputSearch({ type: data.type, value: [] });
     },
     [dataSearch]
   );
