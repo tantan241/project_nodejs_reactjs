@@ -1,0 +1,24 @@
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import Provider from './store/Provider';
+// import GlobalStyle from "./components/GlobalStyle";
+import { SnackbarProvider, useSnackbar } from "notistack";
+import GlobalStyle from "./components/GlobalStyle";
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <GlobalStyle>
+    <Provider>
+    <SnackbarProvider maxSnack={3}>
+      <App />
+    </SnackbarProvider>
+    </Provider>
+  </GlobalStyle>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();

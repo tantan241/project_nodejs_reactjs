@@ -1,0 +1,29 @@
+.wrapper {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+.left {
+    width: 18%;
+    // min-width: 250px;
+    background-color:rgb(98 103 207 / 50%);
+    height: 100vh;
+}
+.right {
+    width: 82%;
+    overflow: scroll;
+    // height: 100vh;
+}
+.header-nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    
+}
+
+.header-text {
+    flex: 1;
+    font-size: 2rem;
+}
