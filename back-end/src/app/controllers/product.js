@@ -150,6 +150,33 @@ class productController {
             res.status(500).json({ error: "Internal Server Error" });
         }
 	}
+    async updateProduct(req, res) {
+		try {
+			const id = req.params.id;
+			const data = req.body;
+
+			const options = { new: true, runValidators: true };
+			const updatedBrand = await Product.findOneAndUpdate({ _id: id }, data, options);
+			if (updatedBrand) {
+				res.status(200).json({ data: updatedBrand, status: 200, messenger: "Update thành công" });
+			} else {
+				res.status(404).json({ error: "Item not found" });
+			}
+		} catch (error) {
+			console.log(error);
+			res.status(500).json({ error: "Internal Server Error" });
+		}
+	}
+    async addNewProduct(req, res) {
+		try {
+            console.log(req.body,'0000')
+			const newItem = new Product(req.body);
+			const savedItem = newItem.save();
+			await res.status(201).json({ status: 200, data: savedItem, messenger: "Thêm mới thành công" });
+		} catch (error) {
+			res.status(500).json({ error: "Internal Server Error" });
+		}
+	}
 }
 
 module.exports = new productController();

@@ -38,8 +38,8 @@ function Product() {
 			return data.map((item) => ({
 				...item,
 				brand:
-					Array.isArray(brands) && brands.find((it) => it.id === item.brand_id)
-						? brands.find((it) => it.id === item.brand_id).name
+					Array.isArray(brands) && brands.find((it) => it.id === item.brandId)
+						? brands.find((it) => it.id === item.brandId).name
 						: "",
 				price: item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VNĐ",
 				discount: item.discount.toString() + " %",

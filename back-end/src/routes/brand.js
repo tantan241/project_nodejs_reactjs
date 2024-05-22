@@ -1,12 +1,12 @@
 const express = require('express');
 const {authorization} = require('../common');
-const route = express.Router()
+const router = express.Router()
 const brandController = require('../app/controllers/brand')
 
-route.post('/add',authorization, brandController.addNewBrand)
-route.delete('/delete',authorization, brandController.deleteBrand)
-route.get('/:id',authorization, brandController.getBrandDetail)
-route.post('/:id',authorization, brandController.updateBrand)
-route.post('/',authorization, brandController.getListBrand)
+router.post('/add',authorization, brandController.addNewBrand)
+router.delete('/delete',authorization, brandController.deleteBrand)
+router.get('/:id',authorization, brandController.getBrandDetail)
+router.post('/:id',authorization, brandController.updateBrand)
+router.post('/',authorization, brandController.getListBrand)
 
-module.exports = route
+module.exports = router

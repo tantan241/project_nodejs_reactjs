@@ -15,7 +15,7 @@ import {
 	Typography,
 } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import { API_ADD_PRODUCT, API_ADMIN_PRODUCT, API_UPLOAD_FILE, URL_IMAGE, API_ADMIN_BRAND } from "~/api";
+import {  API_ADMIN_PRODUCT, API_UPLOAD_IMAGE, URL_IMAGE, API_ADMIN_BRAND } from "~/api";
 import { fetchData, handleClickVariant } from "~/common";
 import InputUploadImage from "~/components/InputUploadImage/InputUploadImage";
 import { ACCESS_TOKEN } from "~/constants";
@@ -70,7 +70,7 @@ function ProductEdit() {
 		discount: 0,
 		type: 0,
 		typeAccessory: 0,
-		brand: 1,
+		brandId: 1,
 		number: "",
 		status: 1,
 	});
@@ -137,8 +137,8 @@ function ProductEdit() {
 						price: res.data.price,
 						discount: res.data.discount,
 						type: res.data.type,
-						typeAccessory: res.data.type_accessory,
-						brand: res.data.brand_id,
+						typeAccessory: res.data.typeAccessory,
+						brandId: res.data.brandId,
 						number: res.data.number,
 						status: res.data.status,
 					});
@@ -179,68 +179,57 @@ function ProductEdit() {
 			number: localValues.number * 1,
 			specifications,
 		};
-		let formData = new FormData();
-		formData.append("file", file);
-		const uploadImage = await fetch(API_UPLOAD_FILE, {
-			method: "POST",
-			headers: { Authorization: "Bearer " + token },
-			body: formData,
-		});
-
-		const response = await uploadImage.json();
-		if (response.status === 200 || urls.file) {
-			if (response.status === 200) {
-				data.image = response.fileName;
-			} else {
-				data.image = nameImage;
-			}
-			const image_promises = [];
-			const arrSwap = [];
-
-			for (const item in files) {
-				const form_data = new FormData();
-				form_data.append("file", files[item]);
-
-				if (files[item]) {
-					const itemReplace = item.replace("file", "") * 1;
-
-					arrSwap.push(itemReplace - 1);
-					image_promises.push(
-						fetch(API_UPLOAD_FILE, {
-							method: "POST",
-							headers: { Authorization: "Bearer " + token },
-							body: form_data,
-						}).then((res) => res.json())
-					);
-				}
-			}
-
-			const images_data = await Promise.all(image_promises);
-			const files_data = images_data.filter((data) => data.status === 200).map((data) => data.fileName);
-			let newArr = files_data;
-			if (localValues.id) {
-				nameImages.forEach((item, index) => {
-					arrSwap.forEach((it, idx) => {
-						if (it === index) {
-							newArr = files_data.filter((i) => i !== files_data[idx]);
-							return (nameImages[index] = files_data[idx]);
-						}
-					});
+		console.log(data);
+		if (urls?.file && file?.name) {
+			if (urls.file.replace(URL_IMAGE, "").trim("/") !== file.name) {
+				let formData = new FormData();
+				formData.append("file", file);
+				const uploadImage = await fetch(API_UPLOAD_IMAGE, {
+					method: "POST",
+					headers: { Authorization: "Bearer " + token },
+					body: formData,
 				});
-			}
-
-			if (localValues.id && nameImages.length > 0) {
-				data.images = JSON.stringify(nameImages.concat(newArr));
-			} else {
-				data.images = JSON.stringify(files_data);
-			}
-			await fetchData(API_ADD_PRODUCT, data, "POST", true).then((res) => {
-				if (res.status === 200) {
-					handleClickVariant("success", res.messenger, enqueueSnackbar);
-					navigate("/product");
+				const response = await uploadImage.json();
+				if (response.status === 200) {
+					const payload = { image: response.data.name };
+					pathNameSplit[2] !== "add"
+						? await fetchData(`${API_ADMIN_PRODUCT}/${pathNameSplit[2]}`, payload, "POST", true).then(
+								(res) => {}
+						  )
+						: (data.image = response.data.name);
 				}
-			});
+			}
 		}
+		const imagesPayload = [];
+		let checkFileChange = 0;
+		for (const file in files) {
+			if (files[file]?.name && files[file].name !== urls[file].replace(URL_IMAGE, "").trim("/")) {
+				const formData = new FormData();
+				formData.append("file", files[file]);
+				const uploadImage = await fetch(API_UPLOAD_IMAGE, {
+					method: "POST",
+					headers: { Authorization: "Bearer " + token },
+					body: formData,
+				});
+				const response = await uploadImage.json();
+				response.status = 200 && imagesPayload.push(response.data.name);
+				checkFileChange = 1;
+			} else {
+				urls[file] && imagesPayload.push(urls[file].replace(URL_IMAGE, "").trim("/"));
+			}
+		}
+		!!checkFileChange && pathNameSplit[2] !== "add"
+			? await fetchData(`${API_ADMIN_PRODUCT}/${pathNameSplit[2]}`, { images: imagesPayload }, "POST", true).then(
+					(res) => {}
+			  )
+			: (data.images = imagesPayload);
+		console.log(data);
+		await fetchData(`${API_ADMIN_PRODUCT}/${pathNameSplit[2]}`, data, "POST", true).then((res) => {
+			if (res.status === 200) {
+				handleClickVariant("success", res.messenger, enqueueSnackbar);
+				navigate("/product");
+			}
+		});
 	}
 
 	return (
@@ -267,7 +256,7 @@ function ProductEdit() {
 								Hủy bỏ
 							</Button>
 							<div style={{ margin: "0 5px" }}></div>
-							<Button variant="contained" onClick={() => handleSave()} disabled={!file}>
+							<Button variant="contained" onClick={() => handleSave()}>
 								Lưu
 							</Button>
 						</div>
@@ -342,8 +331,8 @@ function ProductEdit() {
 										select
 										fullWidth
 										label="Thương hiệu"
-										value={localValues.brand}
-										onChange={(e) => handleInputMainChange("brand", e.target.value)}
+										value={localValues.brandId}
+										onChange={(e) => handleInputMainChange("brandId", e.target.value)}
 									>
 										{brands.map((item) => (
 											<MenuItem key={item.value} value={item.value}>

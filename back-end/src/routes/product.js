@@ -1,9 +1,11 @@
-const express = require('express');
-const routes = express.Router()
-const productController = require('../app/controllers/product')
-const {authorization} = require("../common")
+const express = require("express");
+const router = express.Router();
+const productController = require("../app/controllers/product");
+const { authorization } = require("../common");
 
-routes.get('/:id',authorization, productController.getOneProduct)
-routes.post('/',authorization, productController.getListProducts)
+router.post("/add", authorization, productController.addNewProduct);
+router.get("/:id", authorization, productController.getOneProduct);
+router.post("/:id", authorization, productController.updateProduct);
+router.post("/", authorization, productController.getListProducts);
 
-module.exports = routes
+module.exports = router;
